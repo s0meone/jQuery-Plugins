@@ -152,41 +152,6 @@ $.fn.numeric.keyup = function(e)
     var decimal = $.data(this, "numeric.decimal");
     var negative = $.data(this, "numeric.negative");
     
-    // prepend a 0 if necessary
-    if(decimal != "")
-    {
-      
-      // find decimal point
-      var ds = val.indexOf(decimal[0]);
-      // if ds at start, add 0 before
-      if(ds == 0)
-      {
-        this.value = "0" + val;
-        new_caret = carat + 1;
-      }
-      // if ds at position 1, check if there is a - symbol before it
-      if(ds == 1 && val.charAt(0) == "-")
-      {
-        this.value = "-0" + val.substring(1);
-        new_caret = carat + 1;
-      }
-      // find decimal point
-      ds = val.indexOf(decimal[1]);
-      // if ds at start, add 0 before
-      if(ds == 0)
-      {
-       this.value = "0" + val;
-        new_caret = carat + 1;
-      }
-      // if ds at position 1, check if there is a - symbol before it
-      if(ds == 1 && val.charAt(0) == "-")
-      {
-       this.value = "-0" + val.substring(1);
-       new_caret = carat + 1;
-      }
-      val = this.value;
-    }
-    
     // if pasted in, only allow the following characters
     var validChars = [0,1,2,3,4,5,6,7,8,9,'-',decimal[0],decimal[1]];
     // get length of the value (to loop through)
@@ -229,9 +194,45 @@ $.fn.numeric.keyup = function(e)
       var secondPart = val.substring(lastDecimal);
       val = firstPart.replace(new RegExp("[\\" + decimal[0] + "\\" + decimal[1] + "]", "g"), "") + secondPart;
     }
+    
+    // prepend a 0 if necessary
+    if(decimal != "")
+    {
+      // find decimal point
+      var ds = val.indexOf(decimal[0]);
+      // if ds at start, add 0 before
+      if(ds == 0)
+      {
+        val = "0" + val;
+        new_caret = carat + 1;
+      }
+      // if ds at position 1, check if there is a - symbol before it
+      if(ds == 1 && val.charAt(0) == "-")
+      {
+        val = "-0" + val.substring(1);
+        new_caret = carat + 1;
+      }
+      // find decimal point
+      ds = val.indexOf(decimal[1]);
+      // if ds at start, add 0 before
+      if(ds == 0)
+      {
+        val = "0" + val;
+        new_caret = carat + 1;
+      }
+      // if ds at position 1, check if there is a - symbol before it
+      if(ds == 1 && val.charAt(0) == "-")
+      {
+       val = "-0" + val.substring(1);
+       new_caret = carat + 1;
+      }
+    }
+    
     // set the value and prevent the cursor moving to the end
-    this.value = val;
-    $.fn.setSelection(this, new_caret);
+    if (this.value != val) {
+      this.value = val;
+      $.fn.setSelection(this, new_caret);
+    }
   }
 }
 
